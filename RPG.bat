@@ -84,6 +84,7 @@ echo ----------------------
 echo Below this text is the menu.
 echo On the top, there is your Money and Level. Money can be used to purchase items. Money is obtained through battling. Your level quantifies your strength and HP.
 echo On the left, it has the input required to do the action. On the right, there is the action
+echo Input Battle to move onto the Battle menu.
 
 :menu
 echo Hp: %hp% / %maxhp%       Level: %level%       XP: %xp% / %xprequired%
