@@ -12,6 +12,7 @@ set /a xprequired=100
 set /a maxhp=100
 set /a hp=100
 set /a location=tutorial
+set /a 0=0
 
 :settings1
 Pause
@@ -85,8 +86,11 @@ echo Below this text is the menu.
 echo On the top, there is your Money and Level. Money can be used to purchase items. Money is obtained through battling. Your level quantifies your strength and HP.
 echo On the left, it has the input required to do the action. On the right, there is the action
 echo Input Battle to move onto the Battle menu.
-
+echo Once you are in the battle menu, input the difficulty level as 1.
 :menu
+set /a maxhp=%level% * 50 + 50
+if %xp% gtr %xprequired% goto levelup
+if %xp%==%xprequired% goto levelup
 echo Hp: %hp% / %maxhp%       Level: %level%       XP: %xp% / %xprequired%
 echo Battle | Go into the battle menu
 echo Rest   | Resting heals you to max HP.
@@ -97,3 +101,47 @@ if %input%==Rest set /a hp=%maxhp%
 if %input%==Save goto save
 goto menu
 
+:levelup
+set /a xp=%xp%-%xprequired%
+set /a level=%level% + 1
+set /a xprequired=%level% * 100
+goto menu
+
+:battle
+set /p input=Input a difficulty level. 
+set /a location=%input%
+set /a enemyhp=%location% * 75
+set /a enemymaxhp=%location% * 75
+set /a attack=%level% * 5
+set /a enemyattack=%location% * 5
+:fight
+echo    You                    Enemy
+echo  %hp%/%maxhp%     %enemyhp% / %enemymaxhp%
+echo     %attack%               %enemyattack%
+echo.
+echo Press any button to start fighting
+pause
+
+:attacking
+if %hp% lss %0% goto lose
+if %enemyhp% lss %0% goto win
+timeout /nobreak >nul 1
+set /a enemyhp=%enemyhp% - %attack%
+set /a hp=%hp% - %enemyattack%
+cls
+echo    You                    Enemy
+echo  %hp%/%maxhp%     %enemyhp% / %enemymaxhp%
+echo     %attack%               %enemyattack%
+goto attacking
+
+
+:win
+cls
+echo YOU WIN!
+set /a %xp%=%xp% + %location% * 25
+
+:lose
+cls
+echo YOU LOSE!
+goto menu
+set /a hp=0
