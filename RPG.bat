@@ -34,16 +34,22 @@ COLOR 70
 goto settings2
 
 :settings2
-Pause
 cls
 echo SAVES
 echo ----------------------
 echo Type 1 to choose Save Slot 1
 echo Type 2 to choose Save Slot 2
-set /p input=
-if %input%==1 set /a save=1
-if %input%==2 set /a save=2
-goto load
+set /p input= 
+if %input%==1 goto settings3
+if %input%==2 goto settings3
+:settings3
+set /a save=%input%
+goto settings4
+cls
+echo Is this a new save file?
+set /p input=Y/N 
+if %input%==Y goto save
+if %input%==N goto load
 
 :load
 (
@@ -68,7 +74,7 @@ echo %maxhp%
 echo %hp%
 echo %location%
 )>RPG%save%.dlb
-goto menu
+goto %location%
 
 
 :tutorial
@@ -88,6 +94,7 @@ echo On the left, it has the input required to do the action. On the right, ther
 echo Input Battle to move onto the Battle menu.
 echo Once you are in the battle menu, input the difficulty level as 1.
 :menu
+set /a location=menu
 set /a maxhp=%level% * 50 + 50
 if %xp% gtr %xprequired% goto levelup
 if %xp%==%xprequired% goto levelup
